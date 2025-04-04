@@ -60,38 +60,66 @@ const Dashboard = () => {
       const sensorDataRes = await fetchDatosGenerales()
       console.log("Datos de sensores:", sensorDataRes)
 
+      // Verificar si hay datos de sensores y si son válidos
       if (sensorDataRes && sensorDataRes.data) {
+        // Asegurarse de que todos los valores sean números válidos o 0 por defecto
+        const temperatura =
+          sensorDataRes.data.temperatura !== undefined && !isNaN(Number(sensorDataRes.data.temperatura))
+            ? Number(sensorDataRes.data.temperatura)
+            : 0
+
+        const humedad =
+          sensorDataRes.data.humedad !== undefined && !isNaN(Number(sensorDataRes.data.humedad))
+            ? Number(sensorDataRes.data.humedad)
+            : 0
+
+        const lluvia =
+          sensorDataRes.data.lluvia !== undefined && !isNaN(Number(sensorDataRes.data.lluvia))
+            ? Number(sensorDataRes.data.lluvia)
+            : 0
+
+        const sol =
+          sensorDataRes.data.sol !== undefined && !isNaN(Number(sensorDataRes.data.sol))
+            ? Number(sensorDataRes.data.sol)
+            : 0
+
         setSensorData({
-          temperatura: sensorDataRes.data.temperatura,
-          humedad: sensorDataRes.data.humedad,
-          lluvia: sensorDataRes.data.lluvia,
-          sol: sensorDataRes.data.sol,
-          fecha: sensorDataRes.data.fecha,
+          temperatura,
+          humedad,
+          lluvia,
+          sol,
+          fecha: sensorDataRes.data.fecha || "",
         })
 
         if (sensorDataRes.data.fecha) {
           setDataDate(new Date(sensorDataRes.data.fecha).toLocaleString())
+        } else {
+          setDataDate("No disponible")
         }
       } else {
         // Si no hay datos de sensores, establecer valores predeterminados
+        console.log("No se encontraron datos de sensores, usando valores predeterminados")
         setSensorData({
           temperatura: 0,
           humedad: 0,
           lluvia: 0,
           sol: 0,
         })
+        setDataDate("No disponible")
       }
 
       setLastUpdate(new Date().toLocaleString())
     } catch (err: any) {
       console.error("Error al obtener datos:", err)
       setError(err.message || "Error al cargar los datos")
+      // Establecer valores predeterminados en caso de error
       setSensorData({
-        temperatura: -1,
-        humedad: -1,
-        lluvia: -1,
-        sol: -1,
+        temperatura: 0,
+        humedad: 0,
+        lluvia: 0,
+        sol: 0,
       })
+      setDataDate("No disponible")
     } finally {
       setIsLoading(false)
     }
@@ -132,6 +160,14 @@ const Dashboard = () => {
   const parcelasActivas = filtrarParcelasActivas()
   console.log("Parcelas activas para mostrar en el mapa:", parcelasActivas)
 
+  // Función para renderizar el valor del sensor de forma segura
+  const renderSensorValue = (value: number) => {
+    if (value === undefined || value === null || isNaN(value)) {
+      return "0.0"
+    }
+    return value.toFixed(1)
+  }
+
   return (
     <div className="app-container">
       <div className="main-content">
@@ -154,10 +190,20 @@ const Dashboard = () => {
                 </div>
 
                 <div className="dashboard-cards-grid">
-                  <Card title="Temperatura" value={sensorData.temperatura.toFixed(1)} unit="°C" loading={isLoading} />
-                  <Card title="Humedad" value={sensorData.humedad.toFixed(1)} unit="%" loading={isLoading} />
-                  <Card title="Lluvia" value={sensorData.lluvia.toFixed(1)} unit="mm" loading={isLoading} />
-                  <Card title="Intensidad del Sol" value={sensorData.sol.toFixed(1)} unit="lux" loading={isLoading} />
+                  <Card
+                    title="Temperatura"
+                    value={renderSensorValue(sensorData.temperatura)}
+                    unit="°C"
+                    loading={isLoading}
+                  />
+                  <Card title="Humedad" value={renderSensorValue(sensorData.humedad)} unit="%" loading={isLoading} />
+                  <Card title="Lluvia" value={renderSensorValue(sensorData.lluvia)} unit="mm" loading={isLoading} />
+                  <Card
+                    title="Intensidad del Sol"
+                    value={renderSensorValue(sensorData.sol)}
+                    unit="lux"
+                    loading={isLoading}
+                  />
                 </div>
               </div>
 
