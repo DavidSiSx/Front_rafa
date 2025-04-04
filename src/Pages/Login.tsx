@@ -4,9 +4,9 @@ import type React from "react"
 import { useState } from "react"
 import { login } from "../Services/api"
 import { Link, useNavigate } from "react-router-dom"
-import "../Styles/Login.css"
+import { User, KeyRound } from "lucide-react"
 import { useAuth } from "../Context/AuthContext"
-import { Sprout } from "lucide-react"
+import "../Styles/login.css"
 
 const Login = () => {
   const [email, setEmail] = useState("")
@@ -43,9 +43,7 @@ const Login = () => {
     }
 
     if (!validatePassword(sanitizedPassword)) {
-      setError(
-        "Contraseña incorrecta.",
-      )
+      setError("Contraseña incorrecta.")
       return
     }
 
@@ -66,47 +64,51 @@ const Login = () => {
   return (
     <div className="login-container">
       <div className="login-content">
-        {/* Logo con icono de planta */}
-        <div className="login-logo">
-          <Sprout className="plant-icon" size={40} />
-        </div>
-
         <h2 className="login-title">Iniciar Sesión</h2>
-        <form className="login-form" onSubmit={handleSubmit}>
-          <div className="login-form-group">
-            <label className="login-form-label">Email</label>
+        <div className="title-underline"></div>
+
+        <div className="form-group">
+          <label className="form-label">Email</label>
+          <div className="input-container">
+            <User className="input-icon" size={16} />
             <input
-              className="login-form-input"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               maxLength={50}
               placeholder="usuario@gmail.com"
+              className="form-input"
             />
           </div>
-          <div className="login-form-group">
-            <label className="login-form-label">Contraseña</label>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Contraseña</label>
+          <div className="input-container">
+            <KeyRound className="input-icon" size={16} />
             <input
-              className="login-form-input"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               maxLength={20}
               placeholder="••••••••"
+              className="form-input"
             />
           </div>
-          <button className="login-submit-btn" type="submit" disabled={loading}>
-            {loading ? "Cargando..." : "Iniciar Sesión"}
-          </button>
-        </form>
-        {error && <p className="login-error-message">{error}</p>}
+        </div>
 
-        <p className="login-redirect-text">
+        <button className="submit-button" onClick={handleSubmit} disabled={loading}>
+          {loading ? "Cargando..." : "Iniciar Sesión"}
+        </button>
+
+        {error && <p className="error-message">{error}</p>}
+
+        <p className="redirect-text">
           ¿No tienes cuenta?{" "}
-          <Link to="/register" className="login-redirect-link">
-            Regístrate aquí
+          <Link to="/register" className="redirect-link">
+            Regístrate
           </Link>
         </p>
       </div>

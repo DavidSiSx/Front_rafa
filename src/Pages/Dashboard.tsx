@@ -38,6 +38,7 @@ const Dashboard = () => {
     sol: 0,
   })
   const [lastUpdate, setLastUpdate] = useState<string>("No hay datos")
+  const [dataDate, setDataDate] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -46,7 +47,7 @@ const Dashboard = () => {
       setIsLoading(true)
       setError(null)
 
-      // Obtener todos los datos desde el nuevo endpoint /api/dump
+      // Obtener todos los datos desde el endpoint /api/dump
       const allData = await fetchAllData()
       console.log("Datos completos:", allData)
 
@@ -67,6 +68,10 @@ const Dashboard = () => {
           sol: sensorDataRes.data.sol,
           fecha: sensorDataRes.data.fecha,
         })
+
+        if (sensorDataRes.data.fecha) {
+          setDataDate(new Date(sensorDataRes.data.fecha).toLocaleString())
+        }
       } else {
         // Si no hay datos de sensores, establecer valores predeterminados
         setSensorData({
@@ -77,7 +82,7 @@ const Dashboard = () => {
         })
       }
 
-      setLastUpdate(new Date().toLocaleTimeString())
+      setLastUpdate(new Date().toLocaleString())
     } catch (err: any) {
       console.error("Error al obtener datos:", err)
       setError(err.message || "Error al cargar los datos")
@@ -128,41 +133,43 @@ const Dashboard = () => {
   console.log("Parcelas activas para mostrar en el mapa:", parcelasActivas)
 
   return (
-    <div className="dashboard-container">
-      <Sidebar />
+    <div className="app-container">
+      <div className="main-content">
+        <Sidebar />
 
-      <div className="dashboard-main">
-        <Header />
+        <div className="dashboard-main">
+          <Header />
 
-        <main className="dashboard-content">
-          <div className="dashboard-header">
-            <h1 className="dashboard-title">Dashboard</h1>
-            <p className="dashboard-description">Bienvendio al panel de control</p>
-          </div>
-
-          <div className="dashboard-grid">
-            <div className="dashboard-map-container">
-              {/* Pasar solo las parcelas activas al mapa */}
-              <Map parcelas={parcelasActivas} />
+          <main className="dashboard-content">
+            <div className="dashboard-header">
+              <h1 className="dashboard-title">Dashboard</h1>
+              <p className="dashboard-description">Bienvenido al panel de control</p>
             </div>
 
-            <div className="dashboard-cards-container">
-              <div className="dashboard-cards-grid">
-                <Card title="Temperatura" value={sensorData.temperatura.toFixed(1)} unit="°C" loading={isLoading} />
-                <Card title="Humedad" value={sensorData.humedad.toFixed(1)} unit="%" loading={isLoading} />
-                <Card title="Lluvia" value={sensorData.lluvia.toFixed(1)} unit="mm" loading={isLoading} />
-                <Card title="Intensidad del Sol" value={sensorData.sol.toFixed(1)} unit="lux" loading={isLoading} />
+            <div className="dashboard-container">
+              <div className="dashboard-grid">
+                <div className="dashboard-map-container">
+                  {/* Pasar solo las parcelas activas al mapa */}
+                  <Map parcelas={parcelasActivas} />
+                </div>
+
+                <div className="dashboard-cards-grid">
+                  <Card title="Temperatura" value={sensorData.temperatura.toFixed(1)} unit="°C" loading={isLoading} />
+                  <Card title="Humedad" value={sensorData.humedad.toFixed(1)} unit="%" loading={isLoading} />
+                  <Card title="Lluvia" value={sensorData.lluvia.toFixed(1)} unit="mm" loading={isLoading} />
+                  <Card title="Intensidad del Sol" value={sensorData.sol.toFixed(1)} unit="lux" loading={isLoading} />
+                </div>
               </div>
 
               <div className="dashboard-status">
                 <p>Última actualización: {lastUpdate}</p>
-                {sensorData.fecha && <p>Datos registrados: {new Date(sensorData.fecha).toLocaleString()}</p>}
+                {dataDate && <p>Datos registrados: {dataDate}</p>}
               </div>
             </div>
-          </div>
-        </main>
+          </main>
 
-        <Footer />
+          <Footer />
+        </div>
       </div>
     </div>
   )

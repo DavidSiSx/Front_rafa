@@ -207,200 +207,179 @@ const StatisticsPage = () => {
     ],
   }
 
-  // Datos para el gráfico de radar (mantenemos por si se quiere volver a usar)
-  const radarChartData = {
-    labels: ["Temperatura (°C)", "Humedad (%)", "Lluvia (mm)", "Intensidad Solar (lux)"],
-    datasets: [
-      {
-        label: "Valores Actuales",
-        data: [currentAvgTemp, currentAvgHum, currentAvgRain, currentAvgSun],
-        backgroundColor: "rgba(54, 162, 235, 0.2)",
-        borderColor: "rgba(54, 162, 235, 1)",
-        borderWidth: 2,
-        pointBackgroundColor: "rgba(54, 162, 235, 1)",
-        pointBorderColor: "#fff",
-        pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "rgba(54, 162, 235, 1)",
-      },
-      {
-        label: "Valores de Referencia",
-        data: [25, 60, 5, 50], // Valores de referencia
-        backgroundColor: "rgba(255, 99, 132, 0.2)",
-        borderColor: "rgba(255, 99, 132, 1)",
-        borderWidth: 2,
-        pointBackgroundColor: "rgba(255, 99, 132, 1)",
-        pointBorderColor: "#fff",
-        pointHoverBackgroundColor: "#fff",
-        pointHoverBorderColor: "rgba(255, 99, 132, 1)",
-      },
-    ],
-  }
-
   return (
-    <div className="dashboard-container">
-      <Sidebar />
+    <div className="app-container">
+      <div className="main-content">
+        <Sidebar />
 
-      <div className="dashboard-main">
-        <Header />
+        <div className="dashboard-main">
+          <Header />
+          
+          <main className="dashboard-content">
+            
+         
+            <div className="statistics-container">
+            
+              
 
-        <main className="dashboard-content">
-          <div className="statistics-container">
-            <div className="estadisticas-header">
-              <h1 className="estadisticas-title">Estadísticas</h1>
-              <p className="estadisticas-description">Análisis detallado representado por graficos</p>
-              <div className="last-update-container">
-                <span className="last-update">Última actualización: {lastUpdate}</span>
-              </div>
+              {loading ? (
+                <div className="loading-overlay">
+                  <div className="spinner"></div>
+                  <p>Cargando datos...</p>
+                </div>
+              ) : error ? (
+                <div className="error-message">
+                  <span className="error-icon">!</span>
+                  <p>{error}</p>
+                  <button onClick={() => window.location.reload()}>Reintentar</button>
+                </div>
+              ) : (
+                <>
+                  <div className="chart-controls">
+                    <div className="records-selector">
+                      <span>Mostrar últimos: </span>
+                      <div className="records-buttons">
+                        <button
+                          className={recordsToShow === 10 ? "active" : ""}
+                          onClick={() => handleRecordsChange(10)}
+                        >
+                          10
+                        </button>
+                        <button
+                          className={recordsToShow === 20 ? "active" : ""}
+                          onClick={() => handleRecordsChange(20)}
+                        >
+                          20
+                        </button>
+                        <button
+                          className={recordsToShow === 50 ? "active" : ""}
+                          onClick={() => handleRecordsChange(50)}
+                        >
+                          50
+                        </button>
+                        <button
+                          className={recordsToShow === 100 ? "active" : ""}
+                          onClick={() => handleRecordsChange(100)}
+                        >
+                          100
+                        </button>
+                        <button
+                          className={recordsToShow === historicalData.length ? "active" : ""}
+                          onClick={() => handleRecordsChange(historicalData.length)}
+                        >
+                          Todos
+                        </button>
+                      </div>
+                    </div>
+                    <div className="data-info">
+                      <span>
+                        Mostrando {Math.min(recordsToShow, historicalData.length)} de {historicalData.length} registros
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="charts-grid">
+                    <div className="chart-card">
+                      <div className="chart-header">
+                        <div className="chart-title-container">
+                          <h3>Variación de Temperatura y Humedad</h3>
+                          <button
+                            className="info-button"
+                            onClick={() =>
+                              handleInfoClick(
+                                "temp-humidity",
+                                "Este gráfico muestra la variación de temperatura (°C) y humedad (%) a lo largo del tiempo. La temperatura se representa en rojo y la humedad en azul.",
+                              )
+                            }
+                            aria-label="Información sobre el gráfico"
+                          >
+                            <Info size={18} />
+                          </button>
+                          {tooltipInfo.visible && tooltipInfo.id === "temp-humidity" && (
+                            <div className="info-tooltip">{tooltipInfo.text}</div>
+                          )}
+                        </div>
+                        <div className="chart-legend">
+                          <span className="legend-temperature">
+                            <i></i> Temperatura
+                          </span>
+                          <span className="legend-humidity">
+                            <i></i> Humedad
+                          </span>
+                        </div>
+                      </div>
+                      <div className="chart-wrapper">
+                        <CombinedCharts.Line data={lineChartData} />
+                      </div>
+                    </div>
+
+                    <div className="chart-card">
+                      <div className="chart-header">
+                        <div className="chart-title-container">
+                          <h3>Lluvia e Intensidad Solar</h3>
+                          <button
+                            className="info-button"
+                            onClick={() =>
+                              handleInfoClick(
+                                "rain-sun",
+                                "Este gráfico muestra la cantidad de lluvia (mm) y la intensidad solar (lux) registradas. La lluvia se representa en verde y la intensidad solar en amarillo.",
+                              )
+                            }
+                            aria-label="Información sobre el gráfico"
+                          >
+                            <Info size={18} />
+                          </button>
+                          {tooltipInfo.visible && tooltipInfo.id === "rain-sun" && (
+                            <div className="info-tooltip">{tooltipInfo.text}</div>
+                          )}
+                        </div>
+                        <div className="chart-legend">
+                          <span className="legend-rain">
+                            <i></i> Lluvia
+                          </span>
+                          <span className="legend-sun">
+                            <i></i> Intensidad Solar
+                          </span>
+                        </div>
+                      </div>
+                      <div className="chart-wrapper">
+                        <CombinedCharts.Bar data={barChartData} />
+                      </div>
+                    </div>
+
+                    <div className="chart-card full-width">
+                      <div className="chart-header">
+                        <div className="chart-title-container">
+                          <h3>Niveles Actuales vs. Máximos</h3>
+                          <button
+                            className="info-button"
+                            onClick={() =>
+                              handleInfoClick(
+                                "polar-area",
+                                "Este gráfico muestra los valores actuales de cada variable climática en relación con sus valores máximos. Cada sector representa el porcentaje del valor máximo alcanzado por cada variable.",
+                              )
+                            }
+                            aria-label="Información sobre el gráfico"
+                          >
+                            <Info size={18} />
+                          </button>
+                          {tooltipInfo.visible && tooltipInfo.id === "polar-area" && (
+                            <div className="info-tooltip">{tooltipInfo.text}</div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="chart-wrapper polar-chart-wrapper">
+                        <CombinedCharts.PolarArea data={polarAreaData} />
+                      </div>
+                    </div>
+                  </div>
+                </>
+              )}
             </div>
+          </main>
 
-            {loading ? (
-              <div className="loading-overlay">
-                <div className="spinner"></div>
-                <p>Cargando datos...</p>
-              </div>
-            ) : error ? (
-              <div className="error-message">
-                <span className="error-icon">!</span>
-                <p>{error}</p>
-                <button onClick={() => window.location.reload()}>Reintentar</button>
-              </div>
-            ) : (
-              <>
-                <div className="chart-controls">
-                  <div className="records-selector">
-                    <span>Mostrar últimos: </span>
-                    <div className="records-buttons">
-                      <button className={recordsToShow === 10 ? "active" : ""} onClick={() => handleRecordsChange(10)}>
-                        10
-                      </button>
-                      <button className={recordsToShow === 20 ? "active" : ""} onClick={() => handleRecordsChange(20)}>
-                        20
-                      </button>
-                      <button className={recordsToShow === 50 ? "active" : ""} onClick={() => handleRecordsChange(50)}>
-                        50
-                      </button>
-                      <button
-                        className={recordsToShow === 100 ? "active" : ""}
-                        onClick={() => handleRecordsChange(100)}
-                      >
-                        100
-                      </button>
-                      <button
-                        className={recordsToShow === historicalData.length ? "active" : ""}
-                        onClick={() => handleRecordsChange(historicalData.length)}
-                      >
-                        Todos
-                      </button>
-                    </div>
-                  </div>
-                  <div className="data-info">
-                    <span>
-                      Mostrando {Math.min(recordsToShow, historicalData.length)} de {historicalData.length} registros
-                    </span>
-                  </div>
-                </div>
-
-                <div className="charts-grid">
-                  <div className="chart-card">
-                    <div className="chart-header">
-                      <div className="chart-title-container">
-                        <h3>Variación de Temperatura y Humedad</h3>
-                        <button
-                          className="info-button"
-                          onClick={() =>
-                            handleInfoClick(
-                              "temp-humidity",
-                              "Este gráfico muestra la variación de temperatura (°C) y humedad (%) a lo largo del tiempo. La temperatura se representa en rojo y la humedad en azul.",
-                            )
-                          }
-                          aria-label="Información sobre el gráfico"
-                        >
-                          <Info size={18} />
-                        </button>
-                        {tooltipInfo.visible && tooltipInfo.id === "temp-humidity" && (
-                          <div className="info-tooltip">{tooltipInfo.text}</div>
-                        )}
-                      </div>
-                      <div className="chart-legend">
-                        <span className="legend-temperature">
-                          <i></i> Temperatura
-                        </span>
-                        <span className="legend-humidity">
-                          <i></i> Humedad
-                        </span>
-                      </div>
-                    </div>
-                    <div className="chart-wrapper">
-                      <CombinedCharts.Line data={lineChartData} />
-                    </div>
-                  </div>
-
-                  <div className="chart-card">
-                    <div className="chart-header">
-                      <div className="chart-title-container">
-                        <h3>Lluvia e Intensidad Solar</h3>
-                        <button
-                          className="info-button"
-                          onClick={() =>
-                            handleInfoClick(
-                              "rain-sun",
-                              "Este gráfico muestra la cantidad de lluvia (mm) y la intensidad solar (lux) registradas. La lluvia se representa en verde y la intensidad solar en amarillo.",
-                            )
-                          }
-                          aria-label="Información sobre el gráfico"
-                        >
-                          <Info size={18} />
-                        </button>
-                        {tooltipInfo.visible && tooltipInfo.id === "rain-sun" && (
-                          <div className="info-tooltip">{tooltipInfo.text}</div>
-                        )}
-                      </div>
-                      <div className="chart-legend">
-                        <span className="legend-rain">
-                          <i></i> Lluvia
-                        </span>
-                        <span className="legend-sun">
-                          <i></i> Intensidad Solar
-                        </span>
-                      </div>
-                    </div>
-                    <div className="chart-wrapper">
-                      <CombinedCharts.Bar data={barChartData} />
-                    </div>
-                  </div>
-
-                  <div className="chart-card full-width">
-                    <div className="chart-header">
-                      <div className="chart-title-container">
-                        <h3>Niveles Actuales vs. Máximos</h3>
-                        <button
-                          className="info-button"
-                          onClick={() =>
-                            handleInfoClick(
-                              "polar-area",
-                              "Este gráfico muestra los valores actuales de cada variable climática en relación con sus valores máximos. Cada sector representa el porcentaje del valor máximo alcanzado por cada variable.",
-                            )
-                          }
-                          aria-label="Información sobre el gráfico"
-                        >
-                          <Info size={18} />
-                        </button>
-                        {tooltipInfo.visible && tooltipInfo.id === "polar-area" && (
-                          <div className="info-tooltip">{tooltipInfo.text}</div>
-                        )}
-                      </div>
-                    </div>
-                    <div className="chart-wrapper polar-chart-wrapper">
-                      <CombinedCharts.PolarArea data={polarAreaData} />
-                    </div>
-                  </div>
-                </div>
-              </>
-            )}
-          </div>
-        </main>
-
-        <Footer />
+          <Footer />
+        </div>
       </div>
     </div>
   )

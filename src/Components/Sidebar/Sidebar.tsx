@@ -1,70 +1,74 @@
 "use client"
 
 import type React from "react"
-
+import { useState } from "react"
 import { Link, useLocation, useNavigate } from "react-router-dom"
+import { LayoutDashboard, BarChart2, FileX, LogOut } from "lucide-react"
 import { useAuth } from "../../Context/AuthContext"
-import { LayoutDashboard, BarChart3, Trash, LogOut, Wheat } from "lucide-react"
-import "./sidebar.css"
+import "./Sidebar.css"
 
-const Sidebar = () => {
-  const { logout } = useAuth()
-  const navigate = useNavigate()
+const Sidebar: React.FC = () => {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { logout } = useAuth()
+  const [isOpen, setIsOpen] = useState(false)
 
-  const handleLogout = (e: React.MouseEvent) => {
-    e.preventDefault()
+  const closeSidebar = () => {
+    if (window.innerWidth <= 768) {
+      setIsOpen(false)
+    }
+  }
+
+  const handleLogout = () => {
     logout()
+    navigate("/")
   }
 
   return (
-    <aside className="sidebar-container">
-      <div className="sidebar-content">
-        <div className="sidebar-logo">
-          <div className="logo-container">
-            <div className="logo-orbit">
-              <div className="orbit-circle"></div>
-            </div>
-            <div className="logo-plant">
-              <Wheat className="plant-icon" />
-            </div>
-          </div>
-        </div>
-
-        <nav className="sidebar-nav">
-          <Link to="/dashboard" className={`sidebar-link ${location.pathname === "/dashboard" ? "active" : ""}`}>
-            <div className="icon-container">
-              <LayoutDashboard className="nav-icon" />
-            </div>
-            <span className="link-text">Dashboard</span>
-            {location.pathname === "/dashboard" && <div className="active-indicator"></div>}
-          </Link>
-
-          <Link to="/estadisticas" className={`sidebar-link ${location.pathname === "/estadisticas" ? "active" : ""}`}>
-            <div className="icon-container">
-              <BarChart3 className="nav-icon" />
-            </div>
-            <span className="link-text">Estadísticas</span>
-            {location.pathname === "/estadisticas" && <div className="active-indicator"></div>}
-          </Link>
-
-          <Link
-            to="/parcelasEliminadas"
-            className={`sidebar-link ${location.pathname === "/parcelasEliminadas" ? "active" : ""}`}
-          >
-            <div className="icon-container">
-              <Trash className="nav-icon" />
-            </div>
-            <span className="link-text">Parcelas Eliminadas</span>
-            {location.pathname === "/parcelasEliminadas" && <div className="active-indicator"></div>}
-          </Link>
-        </nav>
+    <aside className={`sidebar ${isOpen ? "open" : ""}`}>
+      <div className="sidebar-logo">
+        <h1 className="sidebar-title">SAON</h1>
       </div>
 
+      <nav className="sidebar-nav">
+        <ul className="sidebar-nav-list">
+          <li className="sidebar-nav-item">
+            <Link
+              to="/dashboard"
+              className={`sidebar-nav-link ${location.pathname === "/dashboard" ? "active" : ""}`}
+              onClick={closeSidebar}
+            >
+              <LayoutDashboard className="sidebar-nav-icon" />
+              Dashboard
+            </Link>
+          </li>
+          <li className="sidebar-nav-item">
+            <Link
+              to="/estadisticas"
+              className={`sidebar-nav-link ${location.pathname === "/estadisticas" ? "active" : ""}`}
+              onClick={closeSidebar}
+            >
+              <BarChart2 className="sidebar-nav-icon" />
+              Estadísticas
+            </Link>
+          </li>
+          <li className="sidebar-nav-item">
+            <Link
+              to="/parcelasEliminadas"
+              className={`sidebar-nav-link ${location.pathname === "/parcelasEliminadas" ? "active" : ""}`}
+              onClick={closeSidebar}
+            >
+              <FileX className="sidebar-nav-icon" />
+              Parcelas Eliminadas
+            </Link>
+          </li>
+        </ul>
+      </nav>
+
       <div className="sidebar-footer">
-        <button className="sidebar-exit-btn" onClick={handleLogout}>
-          <LogOut className="exit-icon" />
-          <span>Salir</span>
+        <button className="sidebar-logout-btn" onClick={handleLogout}>
+          <LogOut size={16} style={{ marginRight: "8px" }} />
+          Cerrar sesión
         </button>
       </div>
     </aside>

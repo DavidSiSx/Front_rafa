@@ -66,8 +66,26 @@
     background-position: 1000px 0;
   }
 }
-
+.statistics-title{
+  font-size: 2rem;
+  font-weight: 700;
+  color: var(--brown-primary, #8b4513);
+  margin-bottom: 0.5rem;
+  position: relative;
+  display: inline-block;
+  }
+.statistics-title::after {
+  content: "";
+  position: absolute;
+  bottom: -8px;
+  left: 0;
+  width: 80px;
+  height: 4px;
+  background: var(--primary-gradient, linear-gradient(135deg, #d9a400, #f7c948)); 
+  border-radius: 4px;
+}
 .statistics-container {
+  
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
@@ -76,6 +94,7 @@
   -ms-overflow-style: none;
   padding: 0 1.5rem;
   position: relative;
+  margin: 32px;
 }
 
 .statistics-container::before {

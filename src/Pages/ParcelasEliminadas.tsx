@@ -25,27 +25,29 @@ const ParcelasEliminadas = () => {
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | null>(null)
 
-  useEffect(() => {
-    const fetchParcelasEliminadas = async () => {
-      try {
-        setLoading(true)
+  const fetchParcelasEliminadas = async () => {
+    try {
+      setLoading(true)
+      setError(null)
 
-        // Obtener todos los datos desde el nuevo endpoint
-        const allData = await fetchAllData()
+      // Obtener todos los datos desde el endpoint
+      const allData = await fetchAllData()
+      console.log("Datos completos recibidos:", allData)
 
-        // Filtrar solo las parcelas eliminadas (is_deleted = 1)
-        const parcelasEliminadas = allData.parcelas ? allData.parcelas.filter((p: Parcela) => p.is_deleted === 1) : []
+      // Filtrar solo las parcelas eliminadas (is_deleted = 1)
+      const parcelasEliminadas = allData.parcelas ? allData.parcelas.filter((p: Parcela) => p.is_deleted === 1) : []
 
-        setParcelas(parcelasEliminadas)
-        setError(null)
-      } catch (error: any) {
-        console.error("Error al obtener las parcelas eliminadas:", error)
-        setError("No se pudieron cargar las parcelas eliminadas. Por favor, intente nuevamente.")
-      } finally {
-        setLoading(false)
-      }
+      console.log("Parcelas eliminadas filtradas:", parcelasEliminadas)
+      setParcelas(parcelasEliminadas)
+    } catch (error: any) {
+      console.error("Error al obtener las parcelas eliminadas:", error)
+      setError("No se pudieron cargar las parcelas eliminadas. Por favor, intente nuevamente.")
+    } finally {
+      setLoading(false)
     }
+  }
 
+  useEffect(() => {
     fetchParcelasEliminadas()
   }, [])
 
@@ -65,27 +67,7 @@ const ParcelasEliminadas = () => {
                   <div className="parcelas-eliminadas-error-icon">!</div>
                   <div className="parcelas-eliminadas-error-content">
                     <p className="parcelas-eliminadas-error-message">{error}</p>
-                    <button
-                      className="parcelas-eliminadas-error-button"
-                      onClick={() => {
-                        setLoading(true)
-                        setError(null)
-                        // Reintentar la carga
-                        fetchAllData()
-                          .then((data) => {
-                            const parcelasEliminadas = data.parcelas
-                              ? data.parcelas.filter((p: Parcela) => p.is_deleted === 1)
-                              : []
-                            setParcelas(parcelasEliminadas)
-                            setError(null)
-                          })
-                          .catch((error) => {
-                            console.error("Error al obtener las parcelas eliminadas:", error)
-                            setError("No se pudieron cargar las parcelas eliminadas. Por favor, intente nuevamente.")
-                          })
-                          .finally(() => setLoading(false))
-                      }}
-                    >
+                    <button className="parcelas-eliminadas-error-button" onClick={fetchParcelasEliminadas}>
                       Reintentar
                     </button>
                   </div>

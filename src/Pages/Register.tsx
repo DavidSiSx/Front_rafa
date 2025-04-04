@@ -4,8 +4,8 @@ import type React from "react"
 import { useState } from "react"
 import { register } from "../Services/api"
 import { Link } from "react-router-dom"
-import "../Styles/Register.css"
-import { Sprout, Check, Circle } from "lucide-react"
+import { User, KeyRound } from "lucide-react"
+import "../Styles/register.css"
 
 const Register = () => {
   const [email, setEmail] = useState("")
@@ -72,82 +72,90 @@ const Register = () => {
     }
   }
 
-  const passwordRequirements = validatePassword(password)
-
   return (
     <div className="register-container">
       <div className="register-content">
-        {/* Logo con icono de planta */}
-        <div className="register-logo">
-          <Sprout className="plant-icon" size={40} />
-        </div>
-
         <h2 className="register-title">Registrar Usuario</h2>
-        <form className="register-form" onSubmit={handleSubmit}>
-          <div className="register-form-group">
-            <label className="register-form-label">Email</label>
+        <div className="title-underline"></div>
+
+        <div className="form-group">
+          <label className="form-label">Email</label>
+          <div className="input-container">
+            <User className="input-icon" size={16} />
             <input
-              className="register-form-input"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
               placeholder="usuario@gmail.com"
               maxLength={50}
+              className="form-input"
             />
           </div>
-          <div className="register-form-group">
-            <label className="register-form-label">Contraseña</label>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Contraseña</label>
+          <div className="input-container">
+            <KeyRound className="input-icon" size={16} />
             <input
-              className="register-form-input"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
               placeholder="••••••••"
               maxLength={20}
+              className="form-input"
             />
-            <ul className="password-requirements">
-              <li className={passwordRequirements.length ? "valid" : "invalid"}>
-                {passwordRequirements.length ? <Check size={12} /> : <Circle size={12} />} 6+ caracteres
-              </li>
-              <li className={passwordRequirements.lowercase ? "valid" : "invalid"}>
-                {passwordRequirements.lowercase ? <Check size={12} /> : <Circle size={12} />} Minúscula
-              </li>
-              <li className={passwordRequirements.uppercase ? "valid" : "invalid"}>
-                {passwordRequirements.uppercase ? <Check size={12} /> : <Circle size={12} />} Mayúscula
-              </li>
-              <li className={passwordRequirements.number ? "valid" : "invalid"}>
-                {passwordRequirements.number ? <Check size={12} /> : <Circle size={12} />} Número
-              </li>
-              <li className={passwordRequirements.specialChar ? "valid" : "invalid"}>
-                {passwordRequirements.specialChar ? <Check size={12} /> : <Circle size={12} />} Especial
-              </li>
-            </ul>
           </div>
-          <div className="register-form-group">
-            <label className="register-form-label">Confirmar Contraseña</label>
+
+          <ul className="password-requirements">
+            <li>
+              <span className="requirement-bullet"></span>
+              <span className="requirement-text">Mínimo 6 caracteres</span>
+            </li>
+            <li>
+              <span className="requirement-bullet"></span>
+              <span className="requirement-text">Al menos una letra mayúscula</span>
+            </li>
+            <li>
+              <span className="requirement-bullet"></span>
+              <span className="requirement-text">Al menos un número (0-9)</span>
+            </li>
+            <li>
+              <span className="requirement-bullet"></span>
+              <span className="requirement-text">Al menos un carácter especial</span>
+            </li>
+          </ul>
+        </div>
+
+        <div className="form-group">
+          <label className="form-label">Confirmar Contraseña</label>
+          <div className="input-container">
+            <KeyRound className="input-icon" size={16} />
             <input
-              className="register-form-input"
               type="password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
               required
               placeholder="••••••••"
               maxLength={20}
+              className="form-input"
             />
           </div>
-          <button className="register-submit-btn" type="submit" disabled={loading}>
-            {loading ? "Registrando..." : "Registrar"}
-          </button>
-        </form>
-        {error && <p className="register-error-message">{error}</p>}
-        {success && <p className="register-success-message">{success}</p>}
+        </div>
 
-        <p className="register-redirect-text">
+        <button className="submit-button" onClick={handleSubmit} disabled={loading}>
+          {loading ? "Registrando..." : "Registrar"}
+        </button>
+
+        {error && <p className="error-message">{error}</p>}
+        {success && <p className="success-message">{success}</p>}
+
+        <p className="redirect-text">
           ¿Ya tienes cuenta?{" "}
-          <Link to="/" className="register-redirect-link">
-            Inicia sesión aquí
+          <Link to="/" className="redirect-link">
+            Iniciar Sesión
           </Link>
         </p>
       </div>

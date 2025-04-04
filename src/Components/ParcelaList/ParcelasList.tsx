@@ -1,51 +1,64 @@
+"use client"
+
+import type React from "react"
+import { FileX } from "lucide-react"
 import "./ParcelasList.css"
 
-const ParcelasList = ({ parcelas }: any) => {
-  // Función para formatear la fecha correctamente
-  const formatDate = (dateString: string) => {
-    if (!dateString) return "No disponible"
+interface Parcela {
+  id: number
+  nombre: string
+  ubicacion: string
+  responsable: string
+  tipo_cultivo: string
+  ultimo_riego: string
+  latitud: string
+  longitud: string
+  is_deleted: number
+}
 
-    try {
-      const date = new Date(dateString)
-      if (isNaN(date.getTime())) return "No disponible"
+interface ParcelasListProps {
+  parcelas: Parcela[]
+}
 
-      return date.toLocaleDateString() + " " + date.toLocaleTimeString().slice(0, 5)
-    } catch (error) {
-      return "No disponible"
-    }
+const ParcelasList: React.FC<ParcelasListProps> = ({ parcelas }) => {
+  if (!parcelas || parcelas.length === 0) {
+    return (
+      <div className="parcelas-list-empty">
+        <div className="parcelas-list-empty-icon">
+          <FileX size={48} />
+        </div>
+        <h3 className="parcelas-list-empty-title">No hay parcelas eliminadas</h3>
+        <p className="parcelas-list-empty-message">No se encontraron registros de parcelas eliminadas en el sistema.</p>
+      </div>
+    )
   }
 
   return (
-    <div className="parcelas-list-container">
-      {parcelas.length === 0 ? (
-        <div className="parcelas-list-empty">
-          <div className="parcelas-list-empty-icon">❌</div>
-          <h3 className="parcelas-list-empty-title">En este momento no hay parcelas eliminadas</h3>
-        </div>
-      ) : (
-        <table className="parcelas-list-table">
-          <thead className="parcelas-list-header">
-            <tr className="parcelas-list-header-row">
-              <th className="parcelas-list-header-cell">Nombre</th>
-              <th className="parcelas-list-header-cell">Responsable</th>
-              <th className="parcelas-list-header-cell">Ubicación</th>
-              <th className="parcelas-list-header-cell">Tipo Cultivo</th>
-              <th className="parcelas-list-header-cell">Último Riego</th>
+    <div className="parcelas-list">
+      <table className="parcelas-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Ubicación</th>
+            <th>Responsable</th>
+            <th>Tipo de Cultivo</th>
+            <th>Último Riego</th>
+          </tr>
+        </thead>
+        <tbody>
+          {parcelas.map((parcela) => (
+            <tr key={parcela.id}>
+              <td>{parcela.id}</td>
+              <td>{parcela.nombre}</td>
+              <td>{parcela.ubicacion}</td>
+              <td>{parcela.responsable}</td>
+              <td>{parcela.tipo_cultivo}</td>
+              <td>{new Date(parcela.ultimo_riego).toLocaleString()}</td>
             </tr>
-          </thead>
-          <tbody className="parcelas-list-body">
-            {parcelas.map((parcela: any) => (
-              <tr key={parcela.id} className="parcelas-list-row">
-                <td className="parcelas-list-cell parcelas-list-name">{parcela.nombre}</td>
-                <td className="parcelas-list-cell parcelas-list-responsable">{parcela.responsable}</td>
-                <td className="parcelas-list-cell parcelas-list-ubicacion">{parcela.ubicacion}</td>
-                <td className="parcelas-list-cell parcelas-list-tipo-cultivo">{parcela.tipo_cultivo}</td>
-                <td className="parcelas-list-cell parcelas-list-date">{formatDate(parcela.ultimo_riego)}</td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+          ))}
+        </tbody>
+      </table>
     </div>
   )
 }

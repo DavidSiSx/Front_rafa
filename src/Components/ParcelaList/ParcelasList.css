@@ -1,139 +1,152 @@
-/* Estilos para el componente ParcelasList */
-.parcelas-list-container {
+.parcelas-list {
   width: 100%;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  background-color: rgba(235, 232, 181, 0.4);
-  box-shadow: var(--shadow-sm);
-  border: 1px solid var(--border-subtle);
 }
 
-/* Tabla de parcelas */
-.parcelas-list-table {
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-}
-
-/* Encabezado de la tabla */
-.parcelas-list-header {
-  background-color: rgba(28, 28, 23, 0.1);
-}
-
-.parcelas-list-header-row {
-  border-bottom: 1px solid var(--border-subtle);
-}
-
-.parcelas-list-header-cell {
-  padding: 1rem 1.5rem;
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--text-primary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* Cuerpo de la tabla */
-.parcelas-list-body {
-  color: var(--text-secondary);
-}
-
-.parcelas-list-row {
-  transition: background-color var(--transition-fast);
-  border-bottom: 1px solid rgba(148, 16, 16, 0.05);
-}
-
-.parcelas-list-row:last-child {
-  border-bottom: none;
-}
-
-.parcelas-list-row:hover {
-  background-color: rgba(233, 250, 178, 0.05);
-}
-
-.parcelas-list-cell {
-  padding: 1rem 1.5rem;
-  font-size: 0.95rem;
-}
-
-/* Estilos específicos para cada tipo de celda */
-.parcelas-list-name {
-  font-weight: 500;
-  color: var(--text-primary);
-}
-
-.parcelas-list-responsable {
-  color: var(--text-secondary);
-}
-
-.parcelas-list-ubicacion {
-  color: var(--text-secondary);
-}
-
-.parcelas-list-tipo-cultivo {
-  color: var(--text-secondary);
-}
-
-.parcelas-list-date {
-  color: var(--text-muted);
-  font-size: 0.9rem;
-}
-
-/* Estado vacío */
 .parcelas-list-empty {
+  background: rgba(240, 240, 240, 0.8);
+  border-radius: 12px;
+  padding: 3rem 2rem;
+  text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 3rem 1.5rem;
-  text-align: center;
+  gap: 1.5rem;
 }
 
 .parcelas-list-empty-icon {
   font-size: 3rem;
-  margin-bottom: 1rem;
+  color: #8b4513;
   opacity: 0.5;
-  color: var(--text-secondary);
+  margin-bottom: 1rem;
 }
 
 .parcelas-list-empty-title {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   font-weight: 600;
+  color: #8b4513;
   margin-bottom: 0.5rem;
-  color: var(--text-primary);
 }
 
-.parcelas-list-empty-text {
-  max-width: 400px;
-  color: var(--text-secondary);
+.parcelas-list-empty-message {
+  font-size: 1rem;
+  color: #666;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.parcelas-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.parcelas-table th,
+.parcelas-table td {
+  padding: 1rem;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.parcelas-table th {
+  background-color: #8b4513;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+}
+
+.parcelas-table tr:last-child td {
+  border-bottom: none;
+}
+
+.parcelas-table tr:hover td {
+  background-color: rgba(217, 164, 0, 0.05);
+}
+
+.parcelas-table .deleted-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  background-color: #ef4444;
+  color: white;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.parcelas-table .actions-cell {
+  text-align: right;
+}
+
+.parcelas-table .action-button {
+  background: none;
+  border: none;
+  color: #8b4513;
+  cursor: pointer;
+  padding: 0.5rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.parcelas-table .action-button:hover {
+  background-color: rgba(139, 69, 19, 0.1);
+}
+
+.parcelas-table .action-button + .action-button {
+  margin-left: 0.5rem;
 }
 
 /* Responsive */
+@media (max-width: 992px) {
+  .parcelas-table th,
+  .parcelas-table td {
+    padding: 0.75rem;
+  }
+}
+
 @media (max-width: 768px) {
-  .parcelas-list-container {
+  .parcelas-table {
+    display: block;
     overflow-x: auto;
   }
 
-  .parcelas-list-table {
-    min-width: 600px;
+  .parcelas-list-empty {
+    padding: 2rem 1rem;
   }
 
-  .parcelas-list-header-cell,
-  .parcelas-list-cell {
-    padding: 0.75rem 1rem;
+  .parcelas-list-empty-icon {
+    font-size: 2.5rem;
+  }
+
+  .parcelas-list-empty-title {
+    font-size: 1.25rem;
   }
 }
 
 @media (max-width: 576px) {
+  .parcelas-table th,
+  .parcelas-table td {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  .parcelas-list-empty {
+    padding: 1.5rem 1rem;
+  }
+
   .parcelas-list-empty-icon {
-    font-size: 2.5rem;
+    font-size: 2rem;
   }
 
   .parcelas-list-empty-title {
     font-size: 1.1rem;
   }
 
-  .parcelas-list-empty-text {
+  .parcelas-list-empty-message {
     font-size: 0.9rem;
   }
 }
