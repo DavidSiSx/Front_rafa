@@ -7,7 +7,7 @@ import Footer from "../Components/Footer/Footer"
 import CombinedCharts from "../Components/Graficos/Charts"
 import { Info } from "lucide-react"
 import "../Styles/Estadisticas.css"
-import { fetchAllData } from "../services/api"
+import { fetchAllData } from "../Services/api"
 
 interface HistoricalData {
   id: number

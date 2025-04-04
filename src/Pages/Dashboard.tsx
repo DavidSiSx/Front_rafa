@@ -7,7 +7,7 @@ import Footer from "../Components/Footer/Footer"
 import Card from "../Components/Cards/Card"
 import Map from "../Components/Map/Map"
 import "../Styles/Dashboard.css"
-import { fetchAllData, fetchDatosGenerales } from "../services/api"
+import { fetchAllData, fetchDatosGenerales } from "../Services/api"
 
 interface SensorData {
   temperatura: number
@@ -64,24 +64,22 @@ const Dashboard = () => {
       if (sensorDataRes && sensorDataRes.data) {
         // Asegurarse de que todos los valores sean números válidos o 0 por defecto
         const temperatura =
-          sensorDataRes.data.temperatura !== undefined && !isNaN(Number(sensorDataRes.data.temperatura))
-            ? Number(sensorDataRes.data.temperatura)
+          typeof sensorDataRes.data.temperatura === "number" && !isNaN(sensorDataRes.data.temperatura)
+            ? sensorDataRes.data.temperatura
             : 0
 
         const humedad =
-          sensorDataRes.data.humedad !== undefined && !isNaN(Number(sensorDataRes.data.humedad))
-            ? Number(sensorDataRes.data.humedad)
+          typeof sensorDataRes.data.humedad === "number" && !isNaN(sensorDataRes.data.humedad)
+            ? sensorDataRes.data.humedad
             : 0
 
         const lluvia =
-          sensorDataRes.data.lluvia !== undefined && !isNaN(Number(sensorDataRes.data.lluvia))
-            ? Number(sensorDataRes.data.lluvia)
+          typeof sensorDataRes.data.lluvia === "number" && !isNaN(sensorDataRes.data.lluvia)
+            ? sensorDataRes.data.lluvia
             : 0
 
         const sol =
-          sensorDataRes.data.sol !== undefined && !isNaN(Number(sensorDataRes.data.sol))
-            ? Number(sensorDataRes.data.sol)
-            : 0
+          typeof sensorDataRes.data.sol === "number" && !isNaN(sensorDataRes.data.sol) ? sensorDataRes.data.sol : 0
 
         setSensorData({
           temperatura,
