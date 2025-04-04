@@ -81,7 +81,22 @@
   align-items: center;
   margin-bottom: 0.25rem;
   font-size: 0.85rem;
+}
+
+.requirement-invalid {
   color: #ef4444;
+}
+
+.requirement-valid {
+  color: #22c55e;
+}
+
+.requirement-invalid .requirement-bullet {
+  background-color: #ef4444;
+}
+
+.requirement-valid .requirement-bullet {
+  background-color: #22c55e;
 }
 
 .requirement-bullet {
@@ -89,7 +104,6 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: #ef4444;
   margin-right: 0.5rem;
 }
 

@@ -1,7 +1,7 @@
 "use client"
 
 import type React from "react"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { register } from "../Services/api"
 import { Link } from "react-router-dom"
 import { User, KeyRound } from "lucide-react"
@@ -14,6 +14,22 @@ const Register = () => {
   const [error, setError] = useState("")
   const [success, setSuccess] = useState("")
   const [loading, setLoading] = useState(false)
+  const [passwordRequirements, setPasswordRequirements] = useState({
+    length: false,
+    uppercase: false,
+    number: false,
+    specialChar: false,
+  })
+
+  // Actualizar los requisitos de contraseña cuando cambia la contraseña
+  useEffect(() => {
+    setPasswordRequirements({
+      length: password.length >= 6,
+      uppercase: /[A-Z]/.test(password),
+      number: /\d/.test(password),
+      specialChar: /[\W_]/.test(password),
+    })
+  }, [password])
 
   const validateEmail = (email: string) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -110,19 +126,19 @@ const Register = () => {
           </div>
 
           <ul className="password-requirements">
-            <li>
+            <li className={passwordRequirements.length ? "requirement-valid" : "requirement-invalid"}>
               <span className="requirement-bullet"></span>
               <span className="requirement-text">Mínimo 6 caracteres</span>
             </li>
-            <li>
+            <li className={passwordRequirements.uppercase ? "requirement-valid" : "requirement-invalid"}>
               <span className="requirement-bullet"></span>
               <span className="requirement-text">Al menos una letra mayúscula</span>
             </li>
-            <li>
+            <li className={passwordRequirements.number ? "requirement-valid" : "requirement-invalid"}>
               <span className="requirement-bullet"></span>
               <span className="requirement-text">Al menos un número (0-9)</span>
             </li>
-            <li>
+            <li className={passwordRequirements.specialChar ? "requirement-valid" : "requirement-invalid"}>
               <span className="requirement-bullet"></span>
               <span className="requirement-text">Al menos un carácter especial</span>
             </li>
